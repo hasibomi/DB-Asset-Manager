@@ -1,0 +1,5 @@
+.vscode
+.DS_Store
+env
+__pycache__
+project_db_asset_manager/.env
