@@ -30,8 +30,13 @@
                     <ul>
                         {% for connection in connections %}
                             <li>
-                                <a href="{% url 'asset_manager:connect' id=connection.id %}">{{ connection.connection_name }}</a>
+                                <a href="{% url 'asset_manager:connect' id=connection.id %}">{{ connection.connection_name }}</a> |
+                                <a href="javascript:;" onclick="document.getElementById('connection-delete-form-{{ connection.id }}').submit()">Delete</a>
                             </li>
+
+                            <form action="{% url 'asset_manager:delete' pk=connection.id %}" id="connection-delete-form-{{ connection.id }}" method="post" style="display: none;">
+                                {% csrf_token %}
+                            </form>
                         {% endfor %}
                     </ul>
                 </div>

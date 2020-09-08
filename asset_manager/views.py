@@ -1,7 +1,7 @@
 import os, shutil
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView, FormView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from mysql.connector import connect
@@ -62,13 +62,19 @@ class ConnectToAConnectionView(SuccessMessageMixin, FormView):
             os.makedirs(self.restore_directory)
 
         connection = get_object_or_404(Connection, id=self.kwargs['id'])
-        con = connect(
-            host=connection.db_host,
-            port=connection.db_port,
-            user=connection.db_user,
-            password=connection.db_pass,
-            database=connection.db_name
-        )
+
+        try:
+            con = connect(
+                host=connection.db_host,
+                port=connection.db_port,
+                user=connection.db_user,
+                password=connection.db_pass,
+                database=connection.db_name
+            )
+        except Exception as e:
+            messages.error(self.request, e)
+            return redirect('asset_manager:connect', id=self.kwargs['id'])
+
         cursor = con.cursor()
 
         cursor.execute(
@@ -113,3 +119,9 @@ class ConnectToAConnectionView(SuccessMessageMixin, FormView):
             from_file = os.path.join(src, file)
             to = os.path.join(self.restore_directory, file)
             shutil.copy(from_file, to)
+
+
+class DeleteAConnection(SuccessMessageMixin, DeleteView):
+    model = Connection
+    success_message = "%(connection_name) has been deleted"
+    success_url = reverse_lazy('asset_manager:index')

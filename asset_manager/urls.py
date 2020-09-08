@@ -5,4 +5,5 @@ app_name = 'asset_manager'
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('connect/<id>/', ConnectToAConnectionView.as_view(), name='connect'),
+    path('<pk>/delete/', DeleteAConnection.as_view(), name='delete'),
 ]
