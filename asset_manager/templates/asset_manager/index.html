@@ -1,0 +1,171 @@
+{% extends 'layouts/master.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 offset-3">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#saved-connection" role="tab" aria-controls="saved-connection" aria-selected="true">Saved Connection</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="new-connection-tab" data-toggle="tab" href="#new-connection" role="tab" aria-controls="new-connection" aria-selected="false">New Connection</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="saved-connection" role="tabpanel" aria-labelledby="saved-connection-tab">
+                    <ul>
+                        {% for connection in connections %}
+                            <li>{{ connection.connection_name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="tab-pane fade" id="new-connection" role="tabpanel" aria-labelledby="new-connection-tab">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="{{ form.connection_name.id_for_label }}">
+                                    {{ form.connection_name.label }}
+                                </label>
+                                <input type="text" name="{{ form.connection_name.name }}" id="{{ form.connection_name.id_for_label }}" class="form-control">
+
+                                {% if form.connection_name.errors %}
+                                    {% for error in form.connection_name.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="{{ form.db_host.id_for_label }}">
+                                    {{ form.db_host.label }}
+                                </label>
+                                <input type="text" name="{{ form.db_host.name }}" id="{{ form.db_host.id_for_label }}" class="form-control">
+
+                                {% if form.db_host.errors %}
+                                    {% for error in form.db_host.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="{{ form.db_port.id_for_label }}">
+                                    {{ form.db_port.label }}
+                                </label>
+                                <input type="number" name="{{ form.db_port.name }}" id="{{ form.db_port.id_for_label }}" class="form-control">
+
+                                {% if form.db_port.errors %}
+                                    {% for error in form.db_port.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="{{ form.db_user.id_for_label }}">
+                                    {{ form.db_user.label }}
+                                </label>
+                                <input type="text" name="{{ form.db_user.name }}" id="{{ form.db_user.id_for_label }}" class="form-control">
+
+                                {% if form.db_user.errors %}
+                                    {% for error in form.db_user.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="{{ form.db_pass.id_for_label }}">
+                                    {{ form.db_pass.label }}
+                                </label>
+                                <input type="password" name="{{ form.db_pass.name }}" id="{{ form.db_pass.id_for_label }}" class="form-control">
+
+                                {% if form.db_pass.errors %}
+                                    {% for error in form.db_pass.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="{{ form.db_name.id_for_label }}">
+                                    {{ form.db_name.label }}
+                                </label>
+                                <input type="text" name="{{ form.db_name.name }}" id="{{ form.db_name.id_for_label }}" class="form-control">
+
+                                {% if form.db_name.errors %}
+                                    {% for error in form.db_name.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="{{ form.db_table.id_for_label }}">
+                                    {{ form.db_table.label }}
+                                </label>
+                                <input type="text" name="{{ form.db_table.name }}" id="{{ form.db_table.id_for_label }}" class="form-control">
+
+                                {% if form.db_table.errors %}
+                                    {% for error in form.db_table.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="{{ form.db_column.id_for_label }}">
+                                    {{ form.db_column.label }}
+                                </label>
+                                <input type="text" name="{{ form.db_column.name }}" id="{{ form.db_column.id_for_label }}" class="form-control">
+
+                                {% if form.db_column.errors %}
+                                    {% for error in form.db_column.errors %}
+                                        <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <input type="submit" value="Save" class="btn btn-primary float-right">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
