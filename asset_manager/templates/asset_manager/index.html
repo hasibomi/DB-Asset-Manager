@@ -29,7 +29,9 @@
                 <div class="tab-pane fade show active" id="saved-connection" role="tabpanel" aria-labelledby="saved-connection-tab">
                     <ul>
                         {% for connection in connections %}
-                            <li>{{ connection.connection_name }}</li>
+                            <li>
+                                <a href="{% url 'asset_manager:connect' id=connection.id %}">{{ connection.connection_name }}</a>
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>

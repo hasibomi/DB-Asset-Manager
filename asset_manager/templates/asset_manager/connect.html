@@ -1,0 +1,97 @@
+{% extends 'layouts/master.html' %}
+
+{% block title %}{{ connection.connection_name }}{% endblock title %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 offset-3">
+            {% if messages %}
+                {% for message in messages %}
+                    <p{% if message.tags %} class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}"{% endif %}>
+                        {{ message }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <label for="{{ form.directory.id_for_label }}">{{ form.directory.label }}</label>
+                        <input type="text" name="{{ form.directory.name }}" id="{{ form.directory.id_for_label }}" class="form-control" value="{{ form.directory.value|default_if_none:'' }}">
+                        <p><small class="tex-muted">{{ form.directory.help_text}} </small></p>
+
+                        {% if form.directory.errors %}
+                            {% for error in form.directory.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <label for="{{ form.backup_directory.id_for_label }}">{{ form.backup_directory.label }}</label>
+                        <input type="text" name="{{ form.backup_directory.name }}" id="{{ form.backup_directory.id_for_label }}" class="form-control" value="{{ form.backup_directory.value|default_if_none:'' }}">
+                        <p><small class="tex-muted">{{ form.backup_directory.help_text}} </small></p>
+
+                        {% if form.backup_directory.errors %}
+                            {% for error in form.backup_directory.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <label for="{{ form.restore_directory.id_for_label }}">{{ form.restore_directory.label }}</label>
+                        <input type="text" name="{{ form.restore_directory.name }}" id="{{ form.restore_directory.id_for_label }}" class="form-control" value="{{ form.restore_directory.value|default_if_none:'' }}">
+                        <p><small class="tex-muted">{{ form.restore_directory.help_text}} </small></p>
+
+                        {% if form.restore_directory.errors %}
+                            {% for error in form.restore_directory.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <input type="checkbox" name="{{ form.clear_restore_directory.name }}" id="{{ form.clear_restore_directory.id_for_label }}" value="true">
+                        <label for="{{ form.clear_restore_directory.id_for_label }}">{{ form.clear_restore_directory.label }}</label>
+                        <p><small class="tex-muted">{{ form.clear_restore_directory.help_text}} </small></p>
+
+                        {% if form.clear_restore_directory.errors %}
+                            {% for error in form.clear_restore_directory.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <input type="checkbox" name="{{ form.delete_backup_directory.name }}" id="{{ form.delete_backup_directory.id_for_label }}" value="true">
+                        <label for="{{ form.delete_backup_directory.id_for_label }}">{{ form.delete_backup_directory.label }}</label>
+                        <p><small class="tex-muted">{{ form.delete_backup_directory.help_text}} </small></p>
+
+                        {% if form.delete_backup_directory.errors %}
+                            {% for error in form.delete_backup_directory.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <input type="submit" value="Remove unmatched files" class="btn btn-danger float-right">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock body %}
