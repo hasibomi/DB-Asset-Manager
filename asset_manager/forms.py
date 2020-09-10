@@ -9,6 +9,18 @@ class NewConnectionForm(forms.ModelForm):
 
 
 class ColumnToDIrectoryCompareForm(forms.Form):
+    db_name = forms.CharField(
+        max_length=50,
+        label='Database Name'
+    )
+    db_table = forms.CharField(
+        max_length=50,
+        label='Database Table Name to Connect'
+    )
+    db_column = forms.CharField(
+        max_length=30,
+        label='Database Column to Compare'
+    )
     directory = forms.CharField(
         max_length=255,
         help_text='Directory to Check for matching files'

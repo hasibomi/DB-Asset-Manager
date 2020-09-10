@@ -122,51 +122,6 @@
 
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <label for="{{ form.db_name.id_for_label }}">
-                                    {{ form.db_name.label }}
-                                </label>
-                                <input type="text" name="{{ form.db_name.name }}" id="{{ form.db_name.id_for_label }}" class="form-control">
-
-                                {% if form.db_name.errors %}
-                                    {% for error in form.db_name.errors %}
-                                        <span class="text-danger">{{ error }}</span>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <label for="{{ form.db_table.id_for_label }}">
-                                    {{ form.db_table.label }}
-                                </label>
-                                <input type="text" name="{{ form.db_table.name }}" id="{{ form.db_table.id_for_label }}" class="form-control">
-
-                                {% if form.db_table.errors %}
-                                    {% for error in form.db_table.errors %}
-                                        <span class="text-danger">{{ error }}</span>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <label for="{{ form.db_column.id_for_label }}">
-                                    {{ form.db_column.label }}
-                                </label>
-                                <input type="text" name="{{ form.db_column.name }}" id="{{ form.db_column.id_for_label }}" class="form-control">
-
-                                {% if form.db_column.errors %}
-                                    {% for error in form.db_column.errors %}
-                                        <span class="text-danger">{{ error }}</span>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-12">
                                 <input type="submit" value="Save" class="btn btn-primary float-right">
                             </div>
                         </div>

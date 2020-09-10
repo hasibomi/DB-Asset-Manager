@@ -47,6 +47,10 @@ class ConnectToAConnectionView(SuccessMessageMixin, FormView):
         self.backup_directory = self.remove_trailing(form.cleaned_data['backup_directory'], '/')
         self.restore_directory = self.remove_trailing(form.cleaned_data['restore_directory'], '/')
 
+        db_name = form.cleaned_data['db_name']
+        db_table = form.cleaned_data['db_table']
+        db_column = form.cleaned_data['db_column']
+
         if not os.path.exists(self.directory):
             messages.error(
                 self.request,
@@ -69,7 +73,7 @@ class ConnectToAConnectionView(SuccessMessageMixin, FormView):
                 port=connection.db_port,
                 user=connection.db_user,
                 password=connection.db_pass,
-                database=connection.db_name
+                database=db_name
             )
         except Exception as e:
             messages.error(self.request, e)
@@ -79,8 +83,8 @@ class ConnectToAConnectionView(SuccessMessageMixin, FormView):
 
         cursor.execute(
             'SELECT {} FROM {}'.format(
-                connection.db_column,
-                connection.db_table
+                db_column,
+                db_table
             )
         )
 
