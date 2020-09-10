@@ -1,0 +1,38 @@
+<form method="post">
+    {% csrf_token %}
+
+    {% for field in form_database_export_import.visible_fields %}
+        <div class="form-group row">
+            <div class="col-md-12">
+                {% if field.name == 'download_sql' %}
+                    <input type="checkbox" name="{{ field.name }}" id="{{ field.id_for_label }}" value="True">
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    <p><small>{{ field.help_text }}</small></p>
+                {% else %}
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    <input type="text" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control">
+                    {% if field.help_text %}
+                        <p><small>{{ field.help_text }}</small></p>
+                    {% endif %}
+                {% endif %}
+                
+
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="form-group row">
+        <div class="col-md-12">
+            <input type="submit" value="Start" class="btn btn-success float-right">
+        </div>
+    </div>
+</form>
