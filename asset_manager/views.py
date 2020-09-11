@@ -91,59 +91,6 @@ class ConnectToAConnectionView(SuccessMessageMixin, DetailView):
                     'connection': self.get_object()
                 }
             )
-            
-        # self.directory = self.remove_trailing(form.cleaned_data['directory'], '/')
-        # self.backup_directory = self.remove_trailing(form.cleaned_data['backup_directory'], '/')
-        # self.restore_directory = self.remove_trailing(form.cleaned_data['restore_directory'], '/')
-
-        # db_name = form.cleaned_data['db_name']
-        # db_table = form.cleaned_data['db_table']
-        # db_column = form.cleaned_data['db_column']
-
-        # if not os.path.exists(self.directory):
-        #     messages.error(
-        #         request,
-        #         '{} does not exist'.format(self.directory)
-        #     )
-
-        #     return redirect('asset_manager:connect', id=self.kwargs['id'])
-
-        # if not os.path.exists(self.backup_directory):
-        #     os.makedirs(self.backup_directory)
-
-        # if not os.path.exists(self.restore_directory):
-        #     os.makedirs(self.restore_directory)
-
-        # try:
-        #     con = connect(
-        #         host=self.get_object().db_host,
-        #         port=self.get_object().db_port,
-        #         user=self.get_object().db_user,
-        #         password=self.get_object().db_pass,
-        #         database=db_name
-        #     )
-        # except Exception as e:
-        #     messages.error(request, e)
-        #     return redirect('asset_manager:connect', pk=self.kwargs['pk'])
-
-        # cursor = con.cursor()
-
-        # cursor.execute(
-        #     'SELECT {} FROM {}'.format(
-        #         db_column,
-        #         db_table
-        #     )
-        # )
-
-        # self.backup_files(cursor.fetchall())
-
-        # if form.cleaned_data['clear_restore_directory']:
-        #     self.delete_all_files(self.restore_directory)
-
-        # self.restore_files(self.backup_directory)
-
-        # if form.cleaned_data['delete_backup_directory']:
-        #     shutil.rmtree(self.backup_directory)
 
         asset_backup_restore = AssetBackupRestore()
         asset_backup_restore.set_connection(self.get_object())
