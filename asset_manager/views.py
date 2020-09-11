@@ -45,37 +45,15 @@ class ConnectToAConnectionView(SuccessMessageMixin, DetailView):
     model = Connection
     context_object_name = 'connection'
 
-    def remove_trailing(self, value, string):
-        if value.endswith(string):
-            value = value[:-1]
-
-        return value
-
-    def backup_files(self, query_result):
-        for row in query_result:
-            if row[0]:
-                file = self.directory + '/' + row[0]
-                dest = self.backup_directory + '/' + row[0].split('/')[-1]
-
-                if os.path.exists(file):
-                    shutil.copy(file, dest)
-
-    def delete_all_files(self, src):
-        for file in os.listdir(src):
-            os.remove(os.path.join(src, file))
-
-    def restore_files(self, src):
-        for file in os.listdir(src):
-            from_file = os.path.join(src, file)
-            to = os.path.join(self.restore_directory, file)
-            shutil.copy(from_file, to)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = ColumnToDIrectoryCompareForm()
-        context['form_database_export_import'] = DatabaseExportImportForm()
-
-        return context
+    def handle_form_invalid(self, request, **kwargs):
+        return render(
+            request,
+            self.template_name,
+            context={
+                'connection': self.get_object(),
+                **kwargs
+            }
+        )
 
     def handle_column_to_directory_compare(self, request, form):
         asset_backup_restore = AssetBackupRestore()
@@ -95,22 +73,35 @@ class ConnectToAConnectionView(SuccessMessageMixin, DetailView):
     def handle_database_export_import(self):
         pass
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ColumnToDIrectoryCompareForm()
+        context['form_database_export_import'] = DatabaseExportImportForm()
+
+        return context
+
     def post(self, request, *args, **kwargs):
-        form = ColumnToDIrectoryCompareForm(request.POST)
-        form_database_export_import = DatabaseExportImportForm(request.POST)
+        if 'submit_asset_backup_restore' in request.POST:
+            form = ColumnToDIrectoryCompareForm(request.POST)
 
-        if not form.is_valid():
-            return render(
-                request,
-                self.template_name,
-                context={
-                    'form': form,
-                    'form_database_export_import': form_database_export_import,
-                    'connection': self.get_object()
-                }
-            )
+            if not form.is_valid():
+                return self.handle_form_invalid(
+                    request,
+                    form=form,
+                    form_database_export_import=DatabaseExportImportForm()
+                )
 
-        return self.handle_column_to_directory_compare(request, form)
+            return self.handle_column_to_directory_compare(request, form)
+        elif 'submit_database_backup_restore' in request.POST:
+            form = DatabaseExportImportForm(request.POST)
+
+            if not form.is_valid():
+                return self.handle_form_invalid(
+                    request,
+                    form=ColumnToDIrectoryCompareForm(),
+                    form_database_export_import=form
+                )
+
 
 
 class DeleteAConnection(SuccessMessageMixin, DeleteView):
