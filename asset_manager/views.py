@@ -77,6 +77,24 @@ class ConnectToAConnectionView(SuccessMessageMixin, DetailView):
 
         return context
 
+    def handle_column_to_directory_compare(self, request, form):
+        asset_backup_restore = AssetBackupRestore()
+        asset_backup_restore.set_connection(self.get_object())
+        asset_backup_restore.set_form(form)
+        asset_manager = AssetManager()
+
+        try:
+            asset_manager.operate(asset_backup_restore)
+        except Exception as e:
+            messages.error(request, e)
+            return redirect('asset_manager:connect', pk=self.kwargs['pk'])
+
+        messages.success(request, 'Files are cleared')
+        return redirect('asset_manager:connect', pk=self.kwargs['pk'])
+
+    def handle_database_export_import(self):
+        pass
+
     def post(self, request, *args, **kwargs):
         form = ColumnToDIrectoryCompareForm(request.POST)
         form_database_export_import = DatabaseExportImportForm(request.POST)
@@ -92,19 +110,7 @@ class ConnectToAConnectionView(SuccessMessageMixin, DetailView):
                 }
             )
 
-        asset_backup_restore = AssetBackupRestore()
-        asset_backup_restore.set_connection(self.get_object())
-        asset_backup_restore.set_form(form)
-        asset_manager = AssetManager()
-
-        try:
-            asset_manager.operate(asset_backup_restore)
-        except Exception as e:
-            messages.error(request, e)
-            return redirect('asset_manager:connect', pk=self.kwargs['pk'])
-
-        messages.success(request, 'Files are cleared')
-        return redirect('asset_manager:connect', pk=self.kwargs['pk'])
+        return self.handle_column_to_directory_compare(request, form)
 
 
 class DeleteAConnection(SuccessMessageMixin, DeleteView):
