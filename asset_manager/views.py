@@ -21,7 +21,7 @@ from .forms import (
     DatabaseExportImportForm,
     ColumnToDIrectoryCompareForm
 )
-from .asset_manager import AssetBackupRestore, AssetManager
+from .asset_manager import AssetBackupRestore, DatabaseBackupRestore, AssetManager
 
 
 class IndexView(SuccessMessageMixin, CreateView):
@@ -70,8 +70,22 @@ class ConnectToAConnectionView(SuccessMessageMixin, DetailView):
         messages.success(request, 'Files are cleared')
         return redirect('asset_manager:connect', pk=self.kwargs['pk'])
 
-    def handle_database_export_import(self):
-        pass
+    def handle_database_export_import(self, request, form):
+        database_backup_restore = DatabaseBackupRestore()
+        database_backup_restore.set_connection(self.get_object())
+        database_backup_restore.set_form(form)
+        asset_manager = AssetManager()
+
+        try:
+            asset_manager.operate(database_backup_restore)
+        except Exception as e:
+            if str(e) != '':
+                messages.error(request, e)
+                return redirect('asset_manager:connect', pk=self.kwargs['pk'])
+
+        messages.success(request, 'Database imported')
+
+        return redirect('asset_manager:connect', pk=self.kwargs['pk'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -102,6 +116,10 @@ class ConnectToAConnectionView(SuccessMessageMixin, DetailView):
                     form_database_export_import=form
                 )
 
+            return self.handle_database_export_import(
+                request,
+                form
+            )
 
 
 class DeleteAConnection(SuccessMessageMixin, DeleteView):

@@ -1,4 +1,5 @@
 import os, shutil
+from django.conf import settings
 from abc import ABCMeta, abstractmethod
 from mysql.connector import connect
 
@@ -101,6 +102,49 @@ class AssetBackupRestore(IAssetManager):
 
         if self.form.cleaned_data['delete_backup_directory']:
             shutil.rmtree(backup_directory)
+
+
+class DatabaseBackupRestore(IAssetManager):
+    connection_obj = None
+    form = None
+
+    def set_connection(self, connection):
+        self.connection_obj = connection
+    
+    def set_form(self, form):
+        self.form = form
+
+    def operate(self):
+        export_directory = self.form.cleaned_data['export_directory']
+        database = self.form.cleaned_data['export_db_name']
+        sql = database + '.sql'
+        prev_directory = os.path.join(settings.BASE_DIR, sql)
+
+        if export_directory is not None:
+            self.make_dir(export_directory)
+
+        try:
+            os.system('mysqldump -h {} -P {} -u {} -p{} {} > {}'.format(
+                self.connection_obj.db_host,
+                self.connection_obj.db_port,
+                self.connection_obj.db_user,
+                self.connection_obj.db_pass,
+                database,
+                sql
+            ))
+        except Exception as e:
+            raise Exception(e)
+
+        if export_directory is not None:
+            try:
+                shutil.move(
+                    prev_directory,
+                    os.path.join(export_directory, sql)
+                )
+            except Exception as e:
+                raise Exception(e)
+
+        return super().operate()
 
 
 class AssetManager():

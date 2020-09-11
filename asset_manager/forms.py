@@ -19,6 +19,11 @@ class DatabaseExportImportForm(forms.Form):
         required=False,
         help_text='Separate table names with comma (,)'
     )
+    export_directory = forms.CharField(
+        max_length=255,
+        required=False,
+        help_text='Move the exported database to another directory'
+    )
     import_db_host = forms.CharField(
         max_length=255,
         label='Import Database Host',
